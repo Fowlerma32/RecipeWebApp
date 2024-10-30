@@ -1,11 +1,10 @@
 import './App.css';
 import {useState, useRef, useEffect} from 'react';
-import searchRecipes from "./api";
+import {searchRecipes, searchRecipesBy} from "./api";
 import RecipeCard from "./components/RecipeCard";
 import Search from './components/Search';
 import IngredientForm from './components/IngredientForm';
 import ShowForms from './components/ShowForms';
-
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,7 +28,18 @@ const App = () => {
     catch(e){
       console.log(e);
     }
+  }
 
+  const handleIngredientSearch = async(form) => {
+    try{
+      const recipesData = await searchRecipesBy(form.ingredient_list, form.ignore_pantry, form.ranking)
+      setRecipes(recipesData || []);
+      setSelectedTab("search");
+
+    }
+    catch(e){
+      console.log(e);
+    }
   }
 
   const handleViewMoreClick = async() => {
@@ -42,7 +52,6 @@ const App = () => {
     catch (error){
       console.log(error);
     }
-
   }
 
 
@@ -104,11 +113,21 @@ const App = () => {
   }, [selectedTab]);
 
   return(
-   <div> 
+   <div className="app-container">
+    <div className="header">
+      <img src="/FoodPicture.jpg"></img>
+      <div className="title">My Recipe App</div>
+    </div> 
     <div className="tabs">
-      <h1 onClick={()=> setSelectedTab("search")}>Search Recipes</h1>
-      <h1 onClick={()=> setSelectedTab("addForm")}>Ingredient Form</h1>
-      <h1 onClick={()=> setSelectedTab("showForms")}>Show Forms</h1>
+      <h1 
+        className={selectedTab === "search"? "tab-active" : ""}
+        onClick={()=> setSelectedTab("search")}>Search Recipes</h1>
+      <h1 
+        className={selectedTab === "addForm"? "tab-active" : ""}
+        onClick={()=> setSelectedTab("addForm")}>Ingredient Form</h1>
+      <h1 
+        className={selectedTab === "showForms"? "tab-active" : ""}
+        onClick={()=> setSelectedTab("showForms")}>Show Forms</h1>
     </div>
     {selectedTab === "search" && (<>
       <Search 
@@ -138,8 +157,8 @@ const App = () => {
       />
     )}
     {selectedTab === "showForms" && (
-      <ShowForms forms={forms} setForms={setForms} />
-    )}
+      <ShowForms forms={forms} setForms={setForms} onUpdate={() => fetchForms()} handleIngredientSearch={handleIngredientSearch}/>
+      )}
   </div>
   );
 };

@@ -25,44 +25,35 @@ const searchRecipes = async (searchTerm, page) => {
         console.log(error);
     }
 };
-module.exports = { searchRecipes };
-
-
 
 //work in progress
-const getRecipes = () => {
+const getRecipes = async (ingredients,ignorePantry,ranking) => {
+    if(!API_KEY)
+    {
+        throw new Error("API key not found");
+    }
+
     // Define the API endpoint
-    const spoonacularUrl = `https://api.spoonacular.com/recipes/findByIngredients`;
+    const spoonacularUrl = new URL("https://api.spoonacular.com/recipes/findByIngredients");
 
     // Set up query parameters
     const params = {
-        ingredients: 'apples,flour,sugar', 
-        number: 1, 
-        ranking: 2,
-        ignorePantry: false,
+        ingredients: ingredients, 
+        number: 2, 
+        ranking: ranking,
+        ignorePantry: ignorePantry,
         apiKey: API_KEY
     };
 
-    // Make the request
-    axios.get(spoonacularUrl, { params }).then(response => {
-        const recipes = response.data;
-        recipes.forEach(async (recipe) => {
-            const recipeUrl = `https://spoonacular.com/recipes/${recipe.title}-${recipe.id}`;
+    spoonacularUrl.search = new URLSearchParams(params).toString()
 
-            try {
-                const queryText = `INSERT INTO recipes (Recipe_ID, User_ID, API_ID, Recipe_Name, Recipe_URL) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-                const values = [1,1,recipe.id, recipe.title, recipeUrl];
-                    
-                const res = await pool.query(queryText, values);
-                console.log('Recipe inserted:', res.rows[0]);
-            } catch (err) {
-                console.error('Error inserting recipe:', err.message);
-            }
-
-
-        });
-    })
-    .catch(error => {
-        console.error('Error fetching recipes:', error.message);
-    });
+    try {
+        const searchResponse = await fetch(spoonacularUrl);
+        const resultsJson = await searchResponse.json();
+        return resultsJson;
+    }
+    catch (error){
+        console.log(error);
+    }
 };
+module.exports = { searchRecipes, getRecipes };

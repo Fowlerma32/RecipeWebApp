@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Search= ({ searchTerm, setSearchTerm, handleSearch }) => (
-  <form onSubmit={handleSearch}>
+  <form onSubmit={handleSearch} className="search-form">
     <input 
       type="text" 
       required 

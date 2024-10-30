@@ -9,13 +9,13 @@ const IngredientForm = ({
   setRanking,
   handleFormSubmit,
 }) => (
-  <form id="recipeForm" onSubmit={handleFormSubmit}>
+  <form id="recipeForm" onSubmit={handleFormSubmit} className="create-form">
     <label htmlFor="ingredients">Enter ingredients (comma-separated):</label>
     <input 
       type="text" 
       id="ingredients" 
       name="ingredients" 
-      required
+      //required
       placeholder="apples,flour,sugar"
       value={ingredients}
       onChange={(e) => setIngredients(e.target.value)}
