@@ -10,11 +10,13 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [selectedTab, setSelectedTab] = useState("search");
-  const [ingredients, setIngredients] = useState("");
+  const [includeIngredients, setIncludeIngredients] = useState("");
   const [ignorePantry, setIgnorePantry] = useState(false);
-  const [ranking, setRanking] = useState(2);
+  const [sort, setSort] = useState("max-used-ingredients"); 
+  const [cuisine, setCuisine] = useState("");
   const [forms, setForms] = useState([]);
   const pageNumber = useRef(1);
+  const [searchType, setSearchType] = useState("simple");
 
   
 
@@ -24,6 +26,7 @@ const App = () => {
       const recipes = await searchRecipes(searchTerm, 1)
       setRecipes(recipes.results);    
       pageNumber.current = 1;  
+      setSearchType("simple");
     }
     catch(e){
       console.log(e);
@@ -31,21 +34,32 @@ const App = () => {
   }
 
   const handleIngredientSearch = async(form) => {
-    try{
-      const recipesData = await searchRecipesBy(form.ingredient_list, form.ignore_pantry, form.ranking)
-      setRecipes(recipesData || []);
-      setSelectedTab("search");
+    try {
+      const recipesData = await searchRecipesBy(form.query, 1, form.cuisine, form.ingredient_list, form.ignore_pantry, form.sort);
+      console.log("Recipes Data:", recipesData);
+      setRecipes(Array.isArray(recipesData.results) ? recipesData.results : []);  // Ensure it's an array
+      pageNumber.current = 1; 
 
+      setSearchType("complex");
+      setIncludeIngredients(form.ingredient_list);
+      setCuisine(form.cuisine);
+      setIgnorePantry(form.ignore_pantry);
+      setSort(form.sort);
+
+      setSelectedTab("search");
     }
-    catch(e){
+    catch(e) {
       console.log(e);
+      setRecipes([]);  // Fallback to an empty array on error
     }
-  }
+  };
 
   const handleViewMoreClick = async() => {
     const nextPage = pageNumber.current + 1;
     try{
-      const nextRecipes = await searchRecipes(searchTerm,nextPage);
+      const nextRecipes = searchType === "simple"
+      ? await searchRecipes(searchTerm, nextPage)
+      : await searchRecipesBy(searchTerm, nextPage, cuisine, includeIngredients, ignorePantry, sort);
       setRecipes([...recipes, ...nextRecipes.results]);
       pageNumber.current = nextPage;
     }
@@ -60,9 +74,11 @@ const App = () => {
   
     try {
       const formData = {
-        ingredients,
+        searchTerm,
+        cuisine,
+        includeIngredients,
         ignorePantry,
-        ranking,
+        sort,
       };
   
       const response = await fetch('http://localhost:5000/recipes/forms', {
@@ -81,9 +97,11 @@ const App = () => {
       console.log('Form data successfully sent:', data);
 
       // Reset form fields
-      setIngredients("");
+      setSearchTerm("");
+      setCuisine("");
+      setIncludeIngredients("");
       setIgnorePantry(false);
-      setRanking(2);
+      setSort("max-used-ingredients");
 
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -135,9 +153,11 @@ const App = () => {
             setSearchTerm={setSearchTerm} 
             handleSearch={handleSearch} 
       />
+      <div className="recipe-grid">
       {recipes.map((recipe)=> (
         <RecipeCard recipe={recipe}/>
       ))}
+      </div>
 
       <button
         className = "view-more-button"
@@ -146,13 +166,17 @@ const App = () => {
       </button>    
     </>)}
     {selectedTab === "addForm" && (
-        <IngredientForm 
-        ingredients={ingredients}
-        setIngredients={setIngredients}
+        <IngredientForm
+        searchTerm = {searchTerm}
+        setSearchTerm = {setSearchTerm} 
+        cuisine = {cuisine}
+        setCuisine = {setCuisine}
+        includeIngredients={includeIngredients}
+        setIncludeIngredients={setIncludeIngredients}
         ignorePantry={ignorePantry}
         setIgnorePantry={setIgnorePantry}
-        ranking={ranking}
-        setRanking={setRanking}
+        sort={sort}
+        setSort={setSort}
         handleFormSubmit={handleFormSubmit}
       />
     )}

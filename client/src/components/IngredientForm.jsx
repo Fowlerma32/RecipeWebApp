@@ -1,25 +1,58 @@
 import React from 'react';
 
 const IngredientForm = ({
-  ingredients,
-  setIngredients,
+  searchTerm,
+  setSearchTerm,
+  cuisine,
+  setCuisine,
+  includeIngredients,
+  setIncludeIngredients,
   ignorePantry,
   setIgnorePantry,
-  ranking,
-  setRanking,
+  sort,
+  setSort,
   handleFormSubmit,
 }) => (
   <form id="recipeForm" onSubmit={handleFormSubmit} className="create-form">
-    <label htmlFor="ingredients">Enter ingredients (comma-separated):</label>
+    <label htmlFor="searchTerm">Search Term:</label>
     <input 
       type="text" 
-      id="ingredients" 
-      name="ingredients" 
+      id="searchTerm" 
+      name="searchTerm" 
+      placeholder="burgers"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+
+    <label htmlFor="includeIngredients">Enter ingredients (comma-separated):</label>
+    <input 
+      type="text" 
+      id="includeIngredients" 
+      name="includeIngredients" 
       //required
       placeholder="apples,flour,sugar"
-      value={ingredients}
-      onChange={(e) => setIngredients(e.target.value)}
+      value={includeIngredients}
+      onChange={(e) => setIncludeIngredients(e.target.value)}
     />
+
+    <label htmlFor="cuisine">Cuisine:</label>
+    <select 
+      id="cuisine" 
+      name="cuisine"
+      value={cuisine}
+      onChange={(e) => setCuisine(e.target.value)}
+    >
+      <option value="">Select a Cuisine</option>
+      <option value="African">African</option>
+      <option value="Asian">Asian</option>
+      <option value="American">American</option>
+      <option value="Indian">Indian</option>
+      <option value="Italian">Italian</option>
+      <option value="Mediterranean">Mediterranean</option>
+      <option value="Mexican">Mexican</option>
+      <option value="Nordic">Nordic</option>
+      <option value="Thai">Thai</option>
+    </select>
 
     <div>
       <input 
@@ -32,15 +65,15 @@ const IngredientForm = ({
       <label htmlFor="ignorePantry">Ignore pantry ingredients?</label>
     </div>
 
-    <label htmlFor="ranking">Ranking:</label>
+    <label htmlFor="sort">sort:</label>
     <select 
-      id="ranking" 
-      name="ranking"
-      value={ranking}
-      onChange={(e) => setRanking(e.target.value)}
+      id="sort" 
+      name="sort"
+      value={sort}
+      onChange={(e) => setSort(e.target.value)}
     >
-      <option value={1}>Maximize Used Ingredients</option>
-      <option value={2}>Minimize Missing Ingredients</option>
+      <option value={"max-used-ingredients"}>Maximize Used Ingredients</option>
+      <option value={"min-missing-ingredients"}>Minimize Missing Ingredients</option>
     </select>
 
     <button type="submit">Submit Form</button>

@@ -11,9 +11,11 @@ CREATE TABLE IngredientForm
 (
     Form_ID SERIAL PRIMARY KEY,
     User_ID int REFERENCES UserTable(User_ID),
+    Query varchar(255),
+    Cuisine varchar(255),
     Ingredient_List varchar(255),
     Ignore_Pantry BOOLEAN,
-    Ranking int
+    Sort varchar(255)
 );
 
 CREATE TABLE SavedRecipes

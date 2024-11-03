@@ -11,12 +11,15 @@ export const searchRecipes = async (searchTerm, page) => {
 };
 
 
-export const searchRecipesBy = async (ingredients, ignorePantry, ranking) => {
+export const searchRecipesBy = async (searchTerm, page, cuisine, includeIngredients, ignorePantry, sort) => {
     const baseUrl = new URL("http://localhost:5000/api/recipes/search/ingredients");
 
-    baseUrl.searchParams.append("ingredients", ingredients);
+    baseUrl.searchParams.append("searchTerm", searchTerm);
+    baseUrl.searchParams.append("cuisine", cuisine);
+    baseUrl.searchParams.append("includeIngredients", includeIngredients);
     baseUrl.searchParams.append("ignorePantry", ignorePantry);
-    baseUrl.searchParams.append("ranking", ranking);
+    baseUrl.searchParams.append("sort", sort);
+    baseUrl.searchParams.append("page", page);
 
     const response = await fetch(baseUrl)
     if(!response.ok){

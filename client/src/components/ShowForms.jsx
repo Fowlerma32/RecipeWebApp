@@ -4,19 +4,22 @@ import React, {useState} from 'react';
 const ShowForms = ({forms, setForms, onUpdate, handleIngredientSearch}) =>{
   const [editModeId, setEditModeId] = useState(null);
   const [editableForm, setEditableForm] = useState({
-    ingredients: "",
+    searchTerm: "",
+    cuisine: "",
+    includeIngredients: "",
     ignorePantry: false,
-    ranking: 2
+    sort: ""
 });
-  
 
   // Enter edit mode for a form
 const startEditing = (form) => {
   setEditModeId(form.form_id);
   setEditableForm({
-    ingredients: form.ingredient_list,
+    searchTerm: form.query,
+    cuisine: form.cuisine,
+    includeIngredients: form.ingredient_list,
     ignorePantry: form.ignore_pantry,
-    ranking: form.ranking
+    sort: form.sort
   });
 };
   
@@ -24,9 +27,11 @@ const startEditing = (form) => {
 const saveChanges = async (id) => {
   try {
     const updatedForm = {
-      ingredients: editableForm.ingredients,
+      searchTerm: editableForm.searchTerm,
+      cuisine: editableForm.cuisine,
+      includeIngredients: editableForm.includeIngredients,
       ignorePantry: editableForm.ignorePantry,
-      ranking: editableForm.ranking,
+      sort: editableForm.sort
     };
     await fetch(`http://localhost:5000/recipe/forms/${id}`, {
       method: "PUT",
@@ -70,16 +75,18 @@ return(
           <tr>
             <th>User</th>
             <th>Form Number</th>
+            <th>Search Term</th>
+            <th>Cuisine</th>
             <th>Ingredients</th>
             <th>Ignore Pantry</th>
-            <th>Ranking</th>
+            <th>sort</th>
             <th>Edit</th>
             <th>Delete</th>
             <th>Search Using This Form!</th>
           </tr>
         </thead>
         <tbody>
-          {forms.map(form => (
+          {forms.sort((a, b) => a.form_id - b.form_id).map(form => (
             <tr key = {form.form_id}>
                 <td>{form.user_id}</td>
                 <td>{form.form_id}</td>
@@ -87,8 +94,40 @@ return(
                 {editModeId === form.form_id ? (
                   <input 
                   type="text" 
-                  value={editableForm.ingredients} 
-                  onChange={(e) => setEditableForm({...editableForm, ingredients: e.target.value})} 
+                  value={editableForm.searchTerm} 
+                  onChange={(e) => setEditableForm({...editableForm, searchTerm: e.target.value})} 
+                  />
+                ) : (
+                  form.query
+                )}
+                </td>
+                <td>
+                {editModeId === form.form_id ? (
+                  <select 
+                    value={editableForm.cuisine} 
+                    onChange={(e) => setEditableForm({...editableForm, cuisine: e.target.value})}
+                  >
+                    <option value="">Select a Cuisine</option>
+                    <option value="African">African</option>
+                    <option value="Asian">Asian</option>
+                    <option value="American">American</option>
+                    <option value="Indian">Indian</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Mediterranean">Mediterranean</option>
+                    <option value="Mexican">Mexican</option>
+                    <option value="Nordic">Nordic</option>
+                    <option value="Thai">Thai</option>
+                  </select>
+                ) : (
+                  form.cuisine
+                )}
+                </td>
+                <td>
+                {editModeId === form.form_id ? (
+                  <input 
+                  type="text" 
+                  value={editableForm.includeIngredients} 
+                  onChange={(e) => setEditableForm({...editableForm, includeIngredients: e.target.value})} 
                   />
                 ) : (
                   form.ingredient_list
@@ -108,14 +147,14 @@ return(
                 <td>
                 {editModeId === form.form_id ? (
                   <select 
-                    value={editableForm.ranking} 
-                  onChange={(e) => setEditableForm({...editableForm, ranking: e.target.value})}
+                    value={editableForm.sort} 
+                  onChange={(e) => setEditableForm({...editableForm, sort: e.target.value})}
                   >
-                    <option value={1}>Maximize Used Ingredients</option>
-                    <option value={2}>Minimize Missing Ingredients</option>
+                    <option value={"max-used-ingredients"}>Maximize Used Ingredients</option>
+                    <option value={"min-missing-ingredients"}>Minimize Missing Ingredients</option>
                   </select>
                 ) : (
-                  form.ranking === 1 ? "Maximize Used Ingredients" : "Minimize Missing Ingredients"
+                  form.sort === "max-used-ingredients" ? "Maximize Used Ingredients" : "Minimize Missing Ingredients"
                 )}
                 </td>
                 <td>
