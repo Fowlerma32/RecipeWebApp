@@ -2,21 +2,25 @@ CREATE Database RecipeApp;
 
 CREATE TABLE UserTable
 (
-    User_ID int PRIMARY KEY,
+    User_ID SERIAL PRIMARY KEY,
     Username varchar(16),
     UserPass varchar(255)
 );
 
-CREATE TABLE Ingredients
+CREATE TABLE IngredientForm
 (
-    Ingredient_ID int PRIMARY KEY,
+    Form_ID SERIAL PRIMARY KEY,
     User_ID int REFERENCES UserTable(User_ID),
-    Ingredient_Name varchar(50)
+    Query varchar(255),
+    Cuisine varchar(255),
+    Ingredient_List varchar(255),
+    Ignore_Pantry BOOLEAN,
+    Sort varchar(255)
 );
 
-CREATE TABLE Recipes
+CREATE TABLE SavedRecipes
 (
-    Recipe_ID int PRIMARY KEY,
+    Recipe_ID SERIAL PRIMARY KEY,
     User_ID int REFERENCES UserTable(User_ID),
     API_ID int,
     Recipe_Name varchar(255),

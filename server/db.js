@@ -1,3 +1,5 @@
+//File to connect with the database
+//Should have a .env file with values for the environment variables
 require('dotenv').config();
 const Pool = require("pg").Pool;
 
