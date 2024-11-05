@@ -1,13 +1,17 @@
-const API_KEY = process.env.API_KEY; 
+//File for setting up API endpoints and getting reacipes from API
+
+const API_KEY = process.env.API_KEY; //gets the API key from the .env file
 
 
-
+//Gets recipes by only using search term
 const searchRecipes = async (searchTerm, page) => {
     if(!API_KEY)
     {
         throw new Error("API key not found");
     }
+    // Define the API endpoint
     const spoonacularUrl = new URL("https://api.spoonacular.com/recipes/complexSearch");
+    // Set up query parameters
     const params = {
         apiKey: API_KEY,
         query: searchTerm,
@@ -16,6 +20,7 @@ const searchRecipes = async (searchTerm, page) => {
     }
     spoonacularUrl.search = new URLSearchParams(params).toString()
 
+    //get the results
     try {
         const searchResponse = await fetch(spoonacularUrl);
         const resultsJson = await searchResponse.json();
@@ -26,7 +31,7 @@ const searchRecipes = async (searchTerm, page) => {
     }
 };
 
-//work in progress
+//Gets recipes by using ingredients and other parameters
 const getRecipes = async (searchTerm, page, includeIngredients,ignorePantry,sort,cuisine) => {
     if(!API_KEY)
     {
@@ -49,7 +54,7 @@ const getRecipes = async (searchTerm, page, includeIngredients,ignorePantry,sort
     };
 
     spoonacularUrl.search = new URLSearchParams(params).toString()
-
+    //get the results
     try {
         const searchResponse = await fetch(spoonacularUrl);
         const resultsJson = await searchResponse.json();

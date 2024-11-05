@@ -1,3 +1,4 @@
+//The file for showing all user forms
 import React, {useState} from 'react';
 
 
@@ -11,7 +12,7 @@ const ShowForms = ({forms, setForms, onUpdate, handleIngredientSearch}) =>{
     sort: ""
 });
 
-  // Enter edit mode for a form
+//Enter edit mode for a form
 const startEditing = (form) => {
   setEditModeId(form.form_id);
   setEditableForm({
@@ -23,7 +24,7 @@ const startEditing = (form) => {
   });
 };
   
-// Handle saving
+//Handle saving
 const saveChanges = async (id) => {
   try {
     const updatedForm = {
@@ -39,7 +40,7 @@ const saveChanges = async (id) => {
       body: JSON.stringify(updatedForm),
     });
 
-    // Update the form with the edited data
+    //Update the form with the edited data
     setForms(forms.map(form => 
       form.form_id === id ? { ...form, ...updatedForm } : form
     ));
@@ -53,6 +54,7 @@ const saveChanges = async (id) => {
   }
 };
 
+//Delete a forrm
 const deleteForm = async (id) => {
   try {
     const deleteForm = await fetch(`http://localhost:5000/recipe/forms/${id}`, {
@@ -65,7 +67,7 @@ const deleteForm = async (id) => {
     console.log(error);
   }
 }
-
+//layout for the forms table
 return(
   <div className="table-container">
     <h2>All Submitted Forms</h2>

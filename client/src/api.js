@@ -1,3 +1,6 @@
+//File for getting api results from backend
+
+//basic search function
 export const searchRecipes = async (searchTerm, page) => {
     const baseUrl = new URL("http://localhost:5000/api/recipes/search");
     baseUrl.searchParams.append("searchTerm",searchTerm);
@@ -10,7 +13,7 @@ export const searchRecipes = async (searchTerm, page) => {
     return response.json();
 };
 
-
+//complex search function
 export const searchRecipesBy = async (searchTerm, page, cuisine, includeIngredients, ignorePantry, sort) => {
     const baseUrl = new URL("http://localhost:5000/api/recipes/search/ingredients");
 

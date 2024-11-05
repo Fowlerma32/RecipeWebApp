@@ -1,3 +1,4 @@
+/* basic layout */
 #root{
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
@@ -16,6 +17,7 @@ body{
   }
 }
 
+/* tabs and image layouts */
 .tab-active{
   border-bottom: 4px rgb(202,129,2) solid;
   padding-bottom: 0.5em 
@@ -60,32 +62,14 @@ body{
   cursor: pointer;
 }
 
+/* recipe card layouts */
 .recipe-grid{
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(400px,1fr));
   gap: 2em;
 }
-/*
-.recipe-card{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  background-color: white;
-  padding: 0.5em;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  cursor:pointer;
-  gap: 1.5em;
-}
 
-.recipe-card h3{
-  font-size: 1.5em;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}*/
-
+/* layout for search bar */
 .search-form{
   display: flex;
   background-color: white;
@@ -106,7 +90,7 @@ body{
   border: none;
 }
 
-
+/* Form table layout */
 .table-container {
   display: flex;
   flex-direction: column;
@@ -148,7 +132,7 @@ th {
   font-weight: bold; 
 }
 
-
+/* Creating ingredient form layout */
 .create-form {
   max-width: 5000px; 
   margin: 0 auto; 
@@ -201,11 +185,11 @@ th {
   transition: background-color 0.3s ease;
 }
 
-
 .create-form button:hover {
   background-color: #0056b3;
 }
 
+/* Form table buttons */
 .table-container button{
   padding: 10px 15px; 
   margin: 5px; 

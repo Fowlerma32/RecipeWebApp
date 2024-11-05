@@ -1,3 +1,4 @@
+//Does the searching for the simple search
 import React from 'react';
 
 const Search= ({ searchTerm, setSearchTerm, handleSearch }) => (

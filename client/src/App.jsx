@@ -1,3 +1,5 @@
+//Main file for frontend
+
 import './App.css';
 import {useState, useRef, useEffect} from 'react';
 import {searchRecipes, searchRecipesBy} from "./api";
@@ -5,6 +7,7 @@ import RecipeCard from "./components/RecipeCard";
 import Search from './components/Search';
 import IngredientForm from './components/IngredientForm';
 import ShowForms from './components/ShowForms';
+
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,9 +22,9 @@ const App = () => {
   const [searchType, setSearchType] = useState("simple");
 
   
-
+  //handle the basic searching
   const handleSearch = async(event) => {
-    event.preventDefault();
+    event.preventDefault(); //prevents default refreshing
     try{
       const recipes = await searchRecipes(searchTerm, 1)
       setRecipes(recipes.results);    
@@ -33,11 +36,12 @@ const App = () => {
     }
   }
 
+  //handle the searching with ingredient form
   const handleIngredientSearch = async(form) => {
     try {
       const recipesData = await searchRecipesBy(form.query, 1, form.cuisine, form.ingredient_list, form.ignore_pantry, form.sort);
       console.log("Recipes Data:", recipesData);
-      setRecipes(Array.isArray(recipesData.results) ? recipesData.results : []);  // Ensure it's an array
+      setRecipes(Array.isArray(recipesData.results) ? recipesData.results : []); //check that recipe data is an array
       pageNumber.current = 1; 
 
       setSearchType("complex");
@@ -50,10 +54,11 @@ const App = () => {
     }
     catch(e) {
       console.log(e);
-      setRecipes([]);  // Fallback to an empty array on error
+      setRecipes([]);  //set empty array on error
     }
   };
 
+  //handles the view more button
   const handleViewMoreClick = async() => {
     const nextPage = pageNumber.current + 1;
     try{
@@ -68,9 +73,9 @@ const App = () => {
     }
   }
 
-
+  //handles the form submission
   const handleFormSubmit = async (event) => {
-    event.preventDefault(); // Prevent the page from refreshing on submit
+    event.preventDefault(); //prevents the page from refreshing on submit
   
     try {
       const formData = {
@@ -109,7 +114,7 @@ const App = () => {
   };
 
 
-  
+  //gets all forms
   const fetchForms = async () => {
     try {
       const response = await fetch("http://localhost:5000/recipes/forms");
@@ -130,6 +135,7 @@ const App = () => {
     }
   }, [selectedTab]);
 
+  //sets up webpage layout and tabs
   return(
    <div className="app-container">
     <div className="header">

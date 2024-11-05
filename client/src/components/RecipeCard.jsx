@@ -1,3 +1,4 @@
+//Gets the images of recipes, and makes them clickable
 const RecipeCard = ({recipe}) => {
     const recipeUrl = `https://spoonacular.com/recipes/${recipe.title}-${recipe.id}`;
     return(

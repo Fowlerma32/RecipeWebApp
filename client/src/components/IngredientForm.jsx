@@ -1,3 +1,4 @@
+//File for setting up the ingredient form
 import React from 'react';
 
 const IngredientForm = ({
@@ -29,7 +30,6 @@ const IngredientForm = ({
       type="text" 
       id="includeIngredients" 
       name="includeIngredients" 
-      //required
       placeholder="apples,flour,sugar"
       value={includeIngredients}
       onChange={(e) => setIncludeIngredients(e.target.value)}
